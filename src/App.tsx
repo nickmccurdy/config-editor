@@ -1,4 +1,5 @@
-import { JSONSchema as Schema } from "json-schema-typed";
+import $RefParser, { JSONSchema as Schema } from "json-schema-ref-parser";
+import resolveAllOf from "json-schema-resolve-allof";
 import React, { useEffect, useState } from "react";
 
 interface Catalog {
@@ -64,7 +65,9 @@ export default function App() {
                   try {
                     const response = await fetch(schema.url);
                     const schemaData: Schema = await response.json();
-                    setSchema(schemaData);
+                    setSchema(
+                      resolveAllOf(await $RefParser.dereference(schemaData))
+                    );
                   } catch (error) {
                     console.error(error);
                   }
