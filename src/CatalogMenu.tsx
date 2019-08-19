@@ -1,4 +1,4 @@
-import $RefParser from "json-schema-ref-parser";
+import $RefParser, { JSONSchema } from "json-schema-ref-parser";
 import resolveAllOf from "json-schema-resolve-allof";
 import React from "react";
 
@@ -17,10 +17,10 @@ export interface SchemaReference {
 
 export default function CatalogMenu({
   catalog: { schemas },
-  onSelectCatalog
+  onSelectSchema
 }: {
   catalog: Catalog;
-  onSelectCatalog: (catalog: Catalog) => void;
+  onSelectSchema(schema: JSONSchema): void;
 }) {
   return (
     <ul>
@@ -33,7 +33,7 @@ export default function CatalogMenu({
 
               try {
                 const response = await fetch(url);
-                onSelectCatalog(
+                onSelectSchema(
                   resolveAllOf(
                     await $RefParser.dereference(await response.json())
                   )

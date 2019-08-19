@@ -25,7 +25,7 @@ export default function App() {
   if (schema) {
     return <SchemaEditor schema={schema} />;
   } else if (catalog) {
-    return <CatalogMenu catalog={catalog} onSelectCatalog={setSchema} />;
+    return <CatalogMenu catalog={catalog} onSelectSchema={setSchema} />;
   } else {
     return null;
   }
