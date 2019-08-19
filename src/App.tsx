@@ -1,26 +1,82 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { JSONSchema as Schema } from "json-schema-typed";
+import React, { useEffect, useState } from "react";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Catalog {
+  version: number;
+  schemas: SchemaReference[];
 }
 
-export default App;
+interface SchemaReference {
+  filematch?: string[];
+  url: string;
+  name: string;
+  description: string;
+  versions?: Record<string, string>;
+}
+
+export default function App() {
+  const [catalog, setCatalog] = useState<Catalog>();
+  const [schema, setSchema] = useState<Schema>();
+
+  useEffect(() => {
+    async function fetchCatalog() {
+      try {
+        const response = await fetch(
+          "http://schemastore.org/api/json/catalog.json"
+        );
+        const catalog: Catalog = await response.json();
+        setCatalog(catalog);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchCatalog();
+  }, []);
+
+  if (schema) {
+    return (
+      <>
+        <h1>{schema.title}</h1>
+        {schema.properties &&
+          Object.keys(schema.properties).map(property => (
+            <div>
+              <label>
+                {property}
+                <br />
+                <input />
+              </label>
+            </div>
+          ))}
+      </>
+    );
+  } else if (catalog) {
+    return (
+      <ul>
+        {catalog &&
+          catalog.schemas.map(schema => (
+            <li key={schema.name}>
+              <a
+                href="#"
+                onClick={async event => {
+                  event.preventDefault();
+
+                  try {
+                    const response = await fetch(schema.url);
+                    const schemaData: Schema = await response.json();
+                    setSchema(schemaData);
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }}
+              >
+                {schema.name}
+              </a>
+            </li>
+          ))}
+      </ul>
+    );
+  } else {
+    return null;
+  }
+}
