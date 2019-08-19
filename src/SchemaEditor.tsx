@@ -11,7 +11,7 @@ export default function SchemaEditor({
     <>
       <h1>{title}</h1>
       {Object.keys(properties || []).map(property => (
-        <Property name={property} />
+        <Property key={property} name={property} />
       ))}
     </>
   );
