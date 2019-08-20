@@ -36,9 +36,11 @@ export default function SchemaEditor({
     return (
       <>
         <h1>{schema.title}</h1>
-        {Object.keys(schema.properties || []).map(property => (
-          <Property key={property} name={property} />
-        ))}
+        {Object.entries(schema.properties || []).map(
+          ([property, schema]: [string, JSONSchema]) => (
+            <Property key={property} name={property} {...schema} />
+          )
+        )}
       </>
     );
   } else {
