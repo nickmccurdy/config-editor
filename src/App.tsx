@@ -1,4 +1,10 @@
-import { Router } from "@reach/router";
+import {
+  createHistory,
+  HistorySource,
+  LocationProvider,
+  Router
+} from "@reach/router";
+import createHashSource from "hash-source";
 import React, { useEffect, useState } from "react";
 import CatalogMenu, { Catalog } from "./CatalogMenu";
 import SchemaEditor from "./SchemaEditor";
@@ -23,10 +29,14 @@ export default function App() {
 
   if (catalog) {
     return (
-      <Router>
-        <CatalogMenu path="/" catalog={catalog} />
-        <SchemaEditor path=":name" catalog={catalog} />
-      </Router>
+      <LocationProvider
+        history={createHistory(createHashSource() as HistorySource)}
+      >
+        <Router>
+          <CatalogMenu path="/" catalog={catalog} />
+          <SchemaEditor path=":name" catalog={catalog} />
+        </Router>
+      </LocationProvider>
     );
   } else {
     return null;
