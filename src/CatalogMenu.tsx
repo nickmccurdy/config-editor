@@ -1,5 +1,4 @@
-import $RefParser, { JSONSchema } from "json-schema-ref-parser";
-import resolveAllOf from "json-schema-resolve-allof";
+import { Link, RouteComponentProps } from "@reach/router";
 import React from "react";
 
 export interface Catalog {
@@ -16,35 +15,13 @@ export interface SchemaReference {
 }
 
 export default function CatalogMenu({
-  catalog: { schemas },
-  onSelectSchema
-}: {
-  catalog: Catalog;
-  onSelectSchema(schema: JSONSchema): void;
-}) {
+  catalog: { schemas }
+}: { catalog: Catalog } & RouteComponentProps) {
   return (
     <ul>
-      {schemas.map(({ name, url }) => (
+      {schemas.map(({ name }) => (
         <li key={name}>
-          <a
-            href="#"
-            onClick={async event => {
-              event.preventDefault();
-
-              try {
-                const response = await fetch(url);
-                onSelectSchema(
-                  resolveAllOf(
-                    await $RefParser.dereference(await response.json())
-                  )
-                );
-              } catch (error) {
-                console.error(error);
-              }
-            }}
-          >
-            {name}
-          </a>
+          <Link to={`/${name}`}>{name}</Link>
         </li>
       ))}
     </ul>

@@ -1,11 +1,10 @@
-import { JSONSchema } from "json-schema-ref-parser";
+import { Router } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import CatalogMenu, { Catalog } from "./CatalogMenu";
 import SchemaEditor from "./SchemaEditor";
 
 export default function App() {
   const [catalog, setCatalog] = useState<Catalog>();
-  const [schema, setSchema] = useState<JSONSchema>();
 
   useEffect(() => {
     async function fetchCatalog() {
@@ -22,10 +21,13 @@ export default function App() {
     fetchCatalog();
   }, []);
 
-  if (schema) {
-    return <SchemaEditor schema={schema} />;
-  } else if (catalog) {
-    return <CatalogMenu catalog={catalog} onSelectSchema={setSchema} />;
+  if (catalog) {
+    return (
+      <Router>
+        <CatalogMenu path="/" catalog={catalog} />
+        <SchemaEditor path=":name" catalog={catalog} />
+      </Router>
+    );
   } else {
     return null;
   }
