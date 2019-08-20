@@ -14,5 +14,6 @@ jobs:
       env:
         BUILD_SCRIPT: yarn && yarn build
         BRANCH: gh-pages
+        BASE_BRANCH: github-actions
         FOLDER: build
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
