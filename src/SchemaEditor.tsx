@@ -7,7 +7,7 @@ import Property from "./Property";
 
 export default function SchemaEditor({
   catalog,
-  name
+  name: nameProp
 }: { catalog: Catalog } & RouteComponentProps<{ name: string }>) {
   const [schema, setSchema] = useState<JSONSchema>();
 
@@ -15,7 +15,7 @@ export default function SchemaEditor({
     async function fetchSchema() {
       try {
         const matchingSchema = catalog.schemas.find(
-          schema => schema.name === name
+          currentSchema => currentSchema.name === nameProp
         );
 
         if (matchingSchema) {
@@ -30,20 +30,20 @@ export default function SchemaEditor({
     }
 
     fetchSchema();
-  }, [catalog, name]);
+  }, [catalog, nameProp]);
 
   if (schema) {
     return (
       <>
         <h1>{schema.title}</h1>
         {Object.entries(schema.properties || []).map(
-          ([property, schema]: [string, JSONSchema]) => (
-            <Property key={property} name={property} {...schema} />
+          ([property, currentSchema]: [string, JSONSchema]) => (
+            <Property key={property} name={property} {...currentSchema} />
           )
         )}
       </>
     );
-  } else {
-    return null;
   }
+
+  return null;
 }

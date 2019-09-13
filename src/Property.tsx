@@ -3,13 +3,13 @@ import React from "react";
 import PropertyControl from "./PropertyControl";
 
 export default function Property({
-  name,
+  name: nameProp,
   ...schema
 }: { name: string } & JSONSchema) {
   return (
     <div>
       <label>
-        {name}
+        {nameProp}
         <br />
         <PropertyControl {...schema} />
       </label>

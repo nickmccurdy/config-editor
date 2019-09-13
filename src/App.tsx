@@ -38,7 +38,7 @@ export default function App() {
         </Router>
       </LocationProvider>
     );
-  } else {
-    return null;
   }
+
+  return null;
 }

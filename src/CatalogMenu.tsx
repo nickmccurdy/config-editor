@@ -19,9 +19,9 @@ export default function CatalogMenu({
 }: { catalog: Catalog } & RouteComponentProps) {
   return (
     <ul>
-      {schemas.map(({ name }) => (
-        <li key={name}>
-          <Link to={`/${name}`}>{name}</Link>
+      {schemas.map(({ name: schema }) => (
+        <li key={schema}>
+          <Link to={`/${schema}`}>{schema}</Link>
         </li>
       ))}
     </ul>
